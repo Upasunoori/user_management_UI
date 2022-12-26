@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import './Forgot_password.css';
 import logo from '../../assets/login-page-logo.png';
 
-const hostURL = 'http://localhost:8000';
+const hostURL = 'http://localhost:8080';
 
 function ForgotPasswordPage(){
 

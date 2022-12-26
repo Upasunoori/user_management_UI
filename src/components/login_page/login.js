@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {Link, useNavigate} from 'react-router-dom';
-import {hashSync} from 'bcryptjs';
 import { useCookies } from 'react-cookie';
  
 import './login.css';
@@ -9,7 +8,7 @@ import logo from '../../assets/login-page-logo.png';
 import visibleImg from '../../assets/visible.png'
 import inVisibleImg from '../../assets/invisible.png'
 
-const hostURL = 'http://localhost:8000';
+const hostURL = 'http://localhost:8080';
 
 function LoginPage(){
 
@@ -31,35 +30,36 @@ function LoginPage(){
         }
         let result = {};
         for(let i of res){
-            result[i[0]] = i[1];
+            result[i[0]] = unescape(i[1])//.replace('%20', " ")//.replace('%40', "@");
         }
-        return result;
+        return (result);
     }
 
     useEffect(()=>{
         const cookies = cookieParse(document.cookie);
         if(cookies.User_Name){
-            console.log('123')
-            user_name.current.value = cookies.User_Name;
-            password.current.value = cookies.Password;
+            user_name.current.value = (cookies.User_Name);
+            password.current.value = (cookies.Password);
         }
-    });
+        if(user_name.current.value.length){
+            setLoginBtnEnable(false);
+        }
+    }, []);
 
     function loginSubmit(e){
         e.preventDefault();
 
         if(rememberMe.current.checked){
-            setCookie('User_Name' ,  user_name.current.value , {path:'/login' , maxAge: 4 * 24 * 60 * 60});
-            setCookie('Password' ,  password.current.value , {path:'/login' , maxAge: 4 * 24 * 60 * 60});     
+            setCookie('User_Name' ,  user_name.current.value , {path:'/login' , maxAge: 1 * 24 * 60 * 60});
+            setCookie('Password' ,  password.current.value , {path:'/login' , maxAge: 1 * 24 * 60 * 60});     
         }
-        
         fetch(hostURL+'/login', {
             method:"POST",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body:JSON.stringify({User_Name:user_name.current.value, Password:hashSync(password.current.value)})
+            body:JSON.stringify({User_Name:user_name.current.value, Password : password.current.value })//Password:hashSync(password.current.value)})
         })
         .then(res => res.json())
         .then((data)=> {

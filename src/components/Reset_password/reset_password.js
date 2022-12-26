@@ -8,7 +8,7 @@ import logo from '../../assets/login-page-logo.png';
 import visibleImg from '../../assets/visible.png'
 import inVisibleImg from '../../assets/invisible.png'
 
-const hostURL = 'http://localhost:8000'
+const hostURL = 'http://localhost:8080'
 
 function Password_reset(){
 
